@@ -1,62 +1,4 @@
 import java.awt.CardLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.EventQueue;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.rmi.RemoteException;
-import java.sql.Time;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import javax.swing.AbstractListModel;
-import javax.swing.BorderFactory;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JSpinner;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.SpinnerDateModel;
-import javax.swing.SwingConstants;
-import javax.swing.UIManager;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
-import javax.swing.border.TitledBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
-import com.javaswingcomponents.calendar.JSCCalendar;
-import com.javaswingcomponents.calendar.cellrenderers.CalendarCellRenderer;
-import com.javaswingcomponents.calendar.cellrenderers.CellRendererComponentParameter;
-import com.javaswingcomponents.calendar.listeners.CalendarSelectionEvent;
-import com.javaswingcomponents.calendar.listeners.CalendarSelectionEventType;
-import com.javaswingcomponents.calendar.listeners.CalendarSelectionListener;
-import com.javaswingcomponents.calendar.model.AbstractCalendarModel;
-import com.javaswingcomponents.calendar.model.DayOfWeek;
-import com.javaswingcomponents.calendar.model.Holiday;
-import com.javaswingcomponents.datepicker.JSCDatePicker;
-
-import de.shaoranlaos.dbAPI.Gruppe;
-import de.shaoranlaos.dbAPI.Person;
-import de.shaoranlaos.dbAPI.Termin;
-import javax.swing.JScrollPane;
 
 
 public class GUI {
@@ -782,7 +724,7 @@ public class GUI {
 			panelAdministration.add(panelTermin2);
 			panelTermin2.setLayout(null);
 			
-			JButton btnUeberspringen = new JButton("Ãœberspringen");
+			JButton btnUeberspringen = new JButton("\u00DCberspringen");
 			btnUeberspringen.setFont(new Font("Dialog", Font.PLAIN, 12));
 			btnUeberspringen.setBounds(337, 26, 120, 25);
 			panelTermin2.add(btnUeberspringen);
@@ -992,6 +934,25 @@ public class GUI {
 						}
 					}
 					
+					if(!txtEMail.getText().isEmpty())
+					{
+						r=c.aendernEmail(txtEMail.getText());
+						switch(r)
+						{
+							case 0:
+								updateMitgliedList();
+								messageDialog[1] = "Email";
+								//JOptionPane.showMessageDialog(frmMeetEat, "Nickname erfolgreich geändert.", "ändern", JOptionPane.PLAIN_MESSAGE);
+								break;
+							case 1:
+								JOptionPane.showMessageDialog(frmMeetEat, "Es gab einen Fehler beim ändern der Email.", "ändern", JOptionPane.PLAIN_MESSAGE);
+								break;
+							case 2:
+								JOptionPane.showMessageDialog(frmMeetEat, "Die von Ihnen eingegebene Email ist zu lang. Maximal " +laenge_email+"Zeichen", "ändern", JOptionPane.PLAIN_MESSAGE);
+								break;	
+						}
+					}
+					
 					if(!txtVorname.getText().isEmpty())
 					{
 						r=c.aendernVorname(txtVorname.getText());
@@ -1090,7 +1051,7 @@ public class GUI {
 	
 					int r = -1;
 					try {
-						r = c.erstellenPerson(txtNickname2.getText(), new String(pwdPasswort2.getPassword()), new String(pwdPasswortWdh.getPassword()), txtVorname2.getText(), txtNachname2.getText(), datum);
+						r = c.erstellenPerson(txtNickname2.getText(), new String(pwdPasswort2.getPassword()), new String(pwdPasswortWdh.getPassword()), txtVorname2.getText(), txtNachname2.getText(), datum,txtEMail2.getText());
 					} catch (RemoteException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
