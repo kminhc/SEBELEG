@@ -1,9 +1,67 @@
 import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import javax.swing.AbstractListModel;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JSpinner;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.SpinnerDateModel;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
+import com.javaswingcomponents.calendar.JSCCalendar;
+import com.javaswingcomponents.calendar.cellrenderers.CalendarCellRenderer;
+import com.javaswingcomponents.calendar.cellrenderers.CellRendererComponentParameter;
+import com.javaswingcomponents.calendar.listeners.CalendarSelectionEvent;
+import com.javaswingcomponents.calendar.listeners.CalendarSelectionEventType;
+import com.javaswingcomponents.calendar.listeners.CalendarSelectionListener;
+import com.javaswingcomponents.calendar.model.AbstractCalendarModel;
+import com.javaswingcomponents.calendar.model.DayOfWeek;
+import com.javaswingcomponents.calendar.model.Holiday;
+import com.javaswingcomponents.datepicker.JSCDatePicker;
+
+import de.shaoranlaos.dbAPI.Gruppe;
+import de.shaoranlaos.dbAPI.Person;
+import de.shaoranlaos.dbAPI.Termin;
+import javax.swing.JScrollPane;
 
 
 public class GUI {
     
-    //werte für die maximal zulässigen längen der eingaben
+    //werte fr die maximal zulässigen längen der eingaben
 	int laenge_nickname = 15;
 	int laenge_email = 40;
 	int laenge_name = 20;
