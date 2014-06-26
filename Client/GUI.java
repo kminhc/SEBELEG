@@ -782,7 +782,7 @@ public class GUI {
 			panelAdministration.add(panelTermin2);
 			panelTermin2.setLayout(null);
 			
-			JButton btnUeberspringen = new JButton("Ãœberspringen");
+			JButton btnUeberspringen = new JButton("\u00DCberspringen");
 			btnUeberspringen.setFont(new Font("Dialog", Font.PLAIN, 12));
 			btnUeberspringen.setBounds(337, 26, 120, 25);
 			panelTermin2.add(btnUeberspringen);
@@ -992,6 +992,25 @@ public class GUI {
 						}
 					}
 					
+					if(!txtEMail.getText().isEmpty())
+					{
+						r=c.aendernEmail(txtEMail.getText());
+						switch(r)
+						{
+							case 0:
+								updateMitgliedList();
+								messageDialog[1] = "Email";
+								//JOptionPane.showMessageDialog(frmMeetEat, "Nickname erfolgreich geändert.", "ändern", JOptionPane.PLAIN_MESSAGE);
+								break;
+							case 1:
+								JOptionPane.showMessageDialog(frmMeetEat, "Es gab einen Fehler beim ändern der Email.", "ändern", JOptionPane.PLAIN_MESSAGE);
+								break;
+							case 2:
+								JOptionPane.showMessageDialog(frmMeetEat, "Die von Ihnen eingegebene Email ist zu lang. Maximal " +laenge_email+"Zeichen", "ändern", JOptionPane.PLAIN_MESSAGE);
+								break;	
+						}
+					}
+					
 					if(!txtVorname.getText().isEmpty())
 					{
 						r=c.aendernVorname(txtVorname.getText());
@@ -1090,7 +1109,7 @@ public class GUI {
 	
 					int r = -1;
 					try {
-						r = c.erstellenPerson(txtNickname2.getText(), new String(pwdPasswort2.getPassword()), new String(pwdPasswortWdh.getPassword()), txtVorname2.getText(), txtNachname2.getText(), datum);
+						r = c.erstellenPerson(txtNickname2.getText(), new String(pwdPasswort2.getPassword()), new String(pwdPasswortWdh.getPassword()), txtVorname2.getText(), txtNachname2.getText(), datum,txtEMail2.getText());
 					} catch (RemoteException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();

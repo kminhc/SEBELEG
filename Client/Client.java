@@ -121,7 +121,7 @@ public Termin[] terminArray;
 		}
 	}
 	
-	public int erstellenPerson(String nutzername, String passwort, String passwortWdh, String vorname, String nachname, String geburtstag) throws RemoteException
+	public int erstellenPerson(String nutzername, String passwort, String passwortWdh, String vorname, String nachname, String geburtstag,String email) throws RemoteException
 	{
 	    if(AktNutzer.rechte==ADMIN)
 	    {
@@ -157,7 +157,7 @@ public Termin[] terminArray;
     		String status = Integer.toString(MITGLIED);	//Default
     		//passwort = "1234";                  	//Default
     		int gruppe = 0;                        //ditto
-    		String email = "email4spast@gmail.com"; //ditto
+    		//String email = "email4spast@gmail.com"; //ditto
     		if( (server.erstellenPerson( nutzername,  passwort,  email,  status,  nachname,  vorname,  geburtstag,  gruppe))>0)	{		//rechte=status? int oder String?
     			//System.out.println("Nutzer wurde erfolgreich erstellt");
     			return 0;
@@ -293,7 +293,7 @@ public Termin[] terminArray;
 	
 	public int aendernEmail(String email_new) throws RemoteException
 	{
-	    Scanner sc = new Scanner(System.in);
+	    //Scanner sc = new Scanner(System.in);
 	    //kann jeder machen der angemeldet ist, also keine Rechteabfrage
 	    //System.out.println("Bitte geben Sie den neuen Nickname ein.");
 	    //String email_new = sc.next();
