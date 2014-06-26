@@ -61,7 +61,7 @@ import javax.swing.JScrollPane;
 
 public class GUI {
     
-    //werte für die maximal zulässigen längen der eingaben
+    //werte fr die maximal zulässigen längen der eingaben
 	int laenge_nickname = 15;
 	int laenge_email = 40;
 	int laenge_name = 20;
@@ -782,7 +782,7 @@ public class GUI {
 			panelAdministration.add(panelTermin2);
 			panelTermin2.setLayout(null);
 			
-			JButton btnUeberspringen = new JButton("Überspringen");
+			JButton btnUeberspringen = new JButton("Ãœberspringen");
 			btnUeberspringen.setFont(new Font("Dialog", Font.PLAIN, 12));
 			btnUeberspringen.setBounds(337, 26, 120, 25);
 			panelTermin2.add(btnUeberspringen);
@@ -821,7 +821,7 @@ public class GUI {
 							panelAnmelden.setVisible(false);
 							break;
 						case 1:
-							JOptionPane.showMessageDialog(frmMeetEat, "Anmeldung fehlgeschlagen. Bitte �berpr�fen Sie\nNutzername und Passwort auf korrekte Schreibweise.", "Anmelden", JOptionPane.PLAIN_MESSAGE);
+							JOptionPane.showMessageDialog(frmMeetEat, "Anmeldung fehlgeschlagen. Bitte berprfen Sie\nNutzername und Passwort auf korrekte Schreibweise.", "Anmelden", JOptionPane.PLAIN_MESSAGE);
 							break;
 						case 2:
 							JOptionPane.showMessageDialog(frmMeetEat, "Es konnte keine Verbindung zum Server hergestellt werden.", "Anmelden", JOptionPane.PLAIN_MESSAGE);
@@ -847,7 +847,7 @@ public class GUI {
 		tabbedPane.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				switch (tabbedPane.getTitleAt(tabbedPane.getSelectedIndex())) {
-					case "�bersicht":
+					case "bersicht":
 					case "Terminverwaltung":
 						ladeTermine();
 						updateTerminList();
@@ -898,7 +898,7 @@ public class GUI {
 			}
 		});
 		
-		// Mitglied ausgew�hlt
+		// Mitglied ausgewhlt
 		listMitglieder.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				Person tmpPerson = (Person) listMitglieder.getSelectedValue();
@@ -913,9 +913,9 @@ public class GUI {
 				Person tmpPerson = (Person) comboNutzer.getSelectedItem();
 				try {
 					if (c.hinzufuegenMitglied(tmpPerson.id) == 0) {
-						JOptionPane.showMessageDialog(frmMeetEat, "Nutzer erfolgreich hinzugefügt.", "Hinzufügen", JOptionPane.PLAIN_MESSAGE);
+						JOptionPane.showMessageDialog(frmMeetEat, "Nutzer erfolgreich hinzugefgt.", "Hinzufgen", JOptionPane.PLAIN_MESSAGE);
 					} else {
-						JOptionPane.showMessageDialog(frmMeetEat, "Nutzer konnte nicht hinzugefügt werden. Es gab einen Fehler in der Datenbank", "Hinzufügen", JOptionPane.PLAIN_MESSAGE);
+						JOptionPane.showMessageDialog(frmMeetEat, "Nutzer konnte nicht hinzugefgt werden. Es gab einen Fehler in der Datenbank", "Hinzufgen", JOptionPane.PLAIN_MESSAGE);
 					}
 					updatePersonComboBox(comboNutzer);
 				} catch (RemoteException e1) {
@@ -947,7 +947,18 @@ public class GUI {
 		btnLoeschen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Person tmpPerson = (Person) listMitglieder.getSelectedValue();
-				JOptionPane.showMessageDialog(frmMeetEat, tmpPerson.nickname, "Test", JOptionPane.PLAIN_MESSAGE);
+				try {
+					if(c.loeschenMitglied(tmpPerson.id)==0){
+						JOptionPane.showMessageDialog(frmMeetEat, "Das Mitglied wurde erfolgreich gelöscht.", "Mitglied löschen", JOptionPane.PLAIN_MESSAGE);
+					}
+					else
+						JOptionPane.showMessageDialog(frmMeetEat, "Es ist ein Fehler beim löschen des Mitgliedes aufgetreten.", "Mitglied löschen", JOptionPane.PLAIN_MESSAGE);
+				} catch (RemoteException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+					
+					
 
 			}
 		});
@@ -967,16 +978,16 @@ public class GUI {
 							case 0:
 								updateMitgliedList();
 								messageDialog[0] = "Nickname";
-								//JOptionPane.showMessageDialog(frmMeetEat, "Nickname erfolgreich geï¿½ndert.", "ï¿½ndern", JOptionPane.PLAIN_MESSAGE);
+								//JOptionPane.showMessageDialog(frmMeetEat, "Nickname erfolgreich geändert.", "ändern", JOptionPane.PLAIN_MESSAGE);
 								break;
 							case 1:
-								JOptionPane.showMessageDialog(frmMeetEat, "Nickname leider schon vergeben.", "ï¿½ndern", JOptionPane.PLAIN_MESSAGE);
+								JOptionPane.showMessageDialog(frmMeetEat, "Nickname leider schon vergeben.", "ändern", JOptionPane.PLAIN_MESSAGE);
 								break;
 							case 2:
-								JOptionPane.showMessageDialog(frmMeetEat, "Es gab einen Fehler beim ï¿½ndern vom Nicknamen ", "ï¿½ndern", JOptionPane.PLAIN_MESSAGE);
+								JOptionPane.showMessageDialog(frmMeetEat, "Es gab einen Fehler beim ändern vom Nicknamen ", "ändern", JOptionPane.PLAIN_MESSAGE);
 								break;
 							case 3:
-								JOptionPane.showMessageDialog(frmMeetEat, "Der von Ihnen eingegebene Nickname ist zu lang. Maximal " +laenge_nickname+"Zeichen", "ï¿½ndern", JOptionPane.PLAIN_MESSAGE);
+								JOptionPane.showMessageDialog(frmMeetEat, "Der von Ihnen eingegebene Nickname ist zu lang. Maximal " +laenge_nickname+"Zeichen", "ändern", JOptionPane.PLAIN_MESSAGE);
 								break;
 						}
 					}
@@ -989,13 +1000,13 @@ public class GUI {
 							case 0:
 								updateMitgliedList();
 								messageDialog[1] = "Vorname";
-								//JOptionPane.showMessageDialog(frmMeetEat, "Nickname erfolgreich geï¿½ndert.", "ï¿½ndern", JOptionPane.PLAIN_MESSAGE);
+								//JOptionPane.showMessageDialog(frmMeetEat, "Nickname erfolgreich geändert.", "ändern", JOptionPane.PLAIN_MESSAGE);
 								break;
 							case 1:
-								JOptionPane.showMessageDialog(frmMeetEat, "Es gab einen Fehler beim ï¿½ndern des Vornamen.", "ï¿½ndern", JOptionPane.PLAIN_MESSAGE);
+								JOptionPane.showMessageDialog(frmMeetEat, "Es gab einen Fehler beim ändern des Vornamen.", "ändern", JOptionPane.PLAIN_MESSAGE);
 								break;
 							case 2:
-								JOptionPane.showMessageDialog(frmMeetEat, "Der von Ihnen eingegebene Vorname ist zu lang. Maximal " +laenge_vname+"Zeichen", "ï¿½ndern", JOptionPane.PLAIN_MESSAGE);
+								JOptionPane.showMessageDialog(frmMeetEat, "Der von Ihnen eingegebene Vorname ist zu lang. Maximal " +laenge_vname+"Zeichen", "ändern", JOptionPane.PLAIN_MESSAGE);
 								break;	
 						}
 					}
@@ -1008,13 +1019,13 @@ public class GUI {
 							case 0:
 								updateMitgliedList();
 								messageDialog[2] = "Nachname";
-								//JOptionPane.showMessageDialog(frmMeetEat, "Nickname erfolgreich geï¿½ndert.", "ï¿½ndern", JOptionPane.PLAIN_MESSAGE);
+								//JOptionPane.showMessageDialog(frmMeetEat, "Nickname erfolgreich geändert.", "ändern", JOptionPane.PLAIN_MESSAGE);
 								break;
 							case 1:
-								JOptionPane.showMessageDialog(frmMeetEat, "Es gab einen Fehler beim ï¿½ndern des Nachnamen.", "ï¿½ndern", JOptionPane.PLAIN_MESSAGE);
+								JOptionPane.showMessageDialog(frmMeetEat, "Es gab einen Fehler beim ändern des Nachnamen.", "ändern", JOptionPane.PLAIN_MESSAGE);
 								break;
 							case 2:
-								JOptionPane.showMessageDialog(frmMeetEat, "Der von Ihnen eingegebene Nachname ist zu lang. Maximal " +laenge_name+"Zeichen", "ï¿½ndern", JOptionPane.PLAIN_MESSAGE);
+								JOptionPane.showMessageDialog(frmMeetEat, "Der von Ihnen eingegebene Nachname ist zu lang. Maximal " +laenge_name+"Zeichen", "ändern", JOptionPane.PLAIN_MESSAGE);
 								break;		
 						}
 					}
@@ -1031,10 +1042,10 @@ public class GUI {
 							case 0:
 								updateMitgliedList();
 								messageDialog[3] = "Geburtstag";
-								//JOptionPane.showMessageDialog(frmMeetEat, "Nickname erfolgreich geï¿½ndert.", "ï¿½ndern", JOptionPane.PLAIN_MESSAGE);
+								//JOptionPane.showMessageDialog(frmMeetEat, "Nickname erfolgreich geändert.", "ändern", JOptionPane.PLAIN_MESSAGE);
 								break;
 							case 1:
-								JOptionPane.showMessageDialog(frmMeetEat, "Es gab einen Fehler beim ï¿½ndern des Geburtsdatums.", "ï¿½ndern", JOptionPane.PLAIN_MESSAGE);
+								JOptionPane.showMessageDialog(frmMeetEat, "Es gab einen Fehler beim ändern des Geburtsdatums.", "ändern", JOptionPane.PLAIN_MESSAGE);
 								break;
 						}
 					}
@@ -1057,10 +1068,10 @@ public class GUI {
 					}
 					if(output.equals(""))
 					{
-						JOptionPane.showMessageDialog(frmMeetEat, "Bitte geben sie die zu ï¿½ndernden Daten eingeben!", "ï¿½ndern", JOptionPane.PLAIN_MESSAGE);
+						JOptionPane.showMessageDialog(frmMeetEat, "Bitte geben sie die zu ändernden Daten eingeben!", "ändern", JOptionPane.PLAIN_MESSAGE);
 					}
 					else
-					JOptionPane.showMessageDialog(frmMeetEat, output + " erfolgreich geï¿½ndert.", "ï¿½ndern", JOptionPane.PLAIN_MESSAGE);
+					JOptionPane.showMessageDialog(frmMeetEat, output + " erfolgreich geändert.", "ändern", JOptionPane.PLAIN_MESSAGE);
 				} catch (RemoteException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -1107,7 +1118,7 @@ public class GUI {
 							JOptionPane.showMessageDialog(frmMeetEat, "Bitte Nachname angeben.", "Erstellen", JOptionPane.PLAIN_MESSAGE);
 							break;
 						case 6:
-							JOptionPane.showMessageDialog(frmMeetEat, "Passw�rter stimmen nicht �berein.", "Erstellen", JOptionPane.PLAIN_MESSAGE);
+							JOptionPane.showMessageDialog(frmMeetEat, "Passwrter stimmen nicht berein.", "Erstellen", JOptionPane.PLAIN_MESSAGE);
 							break;
 						case 7:
 							JOptionPane.showMessageDialog(frmMeetEat, "Nutzername vergeben.", "Erstellen", JOptionPane.PLAIN_MESSAGE);
