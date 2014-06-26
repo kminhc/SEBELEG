@@ -3,7 +3,7 @@ import java.awt.CardLayout;
 
 public class GUI {
     
-    //werte fr die maximal zulässigen längen der eingaben
+    //werte für die maximal zulässigen längen der eingaben
 	int laenge_nickname = 15;
 	int laenge_email = 40;
 	int laenge_name = 20;
