@@ -31,7 +31,7 @@ import de.shaoranlaos.dbAPI.Termin;
 
 public class Client implements ClientInterface{
 
-//werte fï¿½r die maximal zulï¿½ssigen lï¿½ngen der eingaben
+//werte für die maximal zulässigen längen der eingaben
 int laenge_nickname = 15;
 int laenge_email = 40;
 int laenge_name = 20;
@@ -401,7 +401,7 @@ public Termin[] terminArray;
 	    if(AktNutzer.rechte == GLEITER)
 	    {
 	           //Gruppenmitglieder sind angezeigt
-	    	//PID wird ï¿½ber GUI angeklickt
+	    	//PID wird über GUI angeklickt
 	    	if(server.loeschenMitglied(PID))
 	    		return 0;
 	    	else return 1;
@@ -472,7 +472,7 @@ else return 4;
 	    } return -9;
 	}	
 	
-	//alte version hinzufï¿½genMIt
+	//alte version hinzufügenMIt
     	       /* int anz = server.anzeigenPersonen().length;
     	        if (anz > 0)    //es gibt ï¿½berhaupt mitglieder
     			{
@@ -538,7 +538,7 @@ else return 4;
 		{
 			int ret = pruefenLaenge(gName,laenge_gruppenname);
 			if(ret == 1)
-				return -3;
+				return 2;
 			//System.out.println("Bitte geben Sie den Gruppennamen an");
 			//String gName = sc.next();
 			/*int anz= server.anzeigenPersonen().length;
@@ -615,7 +615,7 @@ else return 4;
 		{
 			Gruppe tmpGruppe = server.anzeigenGruppe(GruppenID);
 			if(server.vergebenRechte(tmpGruppe.leiter, MITGLIED)==false)
-				return 1;//Fehler beim ï¿½ndern des alten GL
+				return 1;//Fehler beim Ändern des alten GL
 			if(server.aendernGruppenleiter(GruppenID, PID))
 				return 0;
 			else return 2;
