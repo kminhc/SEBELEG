@@ -466,13 +466,13 @@ public Termin[] terminArray;
 else return 4;
     //System.out.println("Keine Personen vorhanden");*/
 	
-	public int hinzufuegenMitglied(int PID) throws RemoteException
+	public int hinzufuegenMitglied(int PID, int GID) throws RemoteException
 	{
 	    //Scanner sc = new Scanner(System.in);
-	    if(AktNutzer.rechte == GLEITER)
+	    if(AktNutzer.rechte >= GLEITER)
 	    {
 	    	//String GID = Integer.toString(AktNutzer.gruppe);
-	    	if(server.hinzufuegenMitglied(PID, String.valueOf(AktNutzer.gruppe)))
+	    	if(server.hinzufuegenMitglied(PID, String.valueOf(GID)))
 	    	{
 	    		return 0;
 	    	}

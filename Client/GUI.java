@@ -1153,9 +1153,10 @@ public class GUI {
 		// Gruppenmitglied hinzufuegen
 		btnHinzufuegen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				Gruppe tmpGruppe = (Gruppe) comboGruppe.getSelectedItem();
 				Person tmpPerson = (Person) comboNutzer.getSelectedItem();
 				try {
-					if (c.hinzufuegenMitglied(tmpPerson.id) == 0) {
+					if (c.hinzufuegenMitglied(tmpPerson.id, tmpGruppe.id) == 0) {
 						JOptionPane.showMessageDialog(frmMeetEat,
 								"Nutzer erfolgreich hinzugefgt.",
 								"Gruppenmitglied hinzufügen",
