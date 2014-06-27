@@ -1,4 +1,5 @@
 import java.net.InetAddress;
+import java.util.Arrays;
 import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
 import java.rmi.RMISecurityManager;
@@ -31,7 +32,7 @@ import de.shaoranlaos.dbAPI.Termin;
 
 public class Client implements ClientInterface{
 
-//werte f�r die maximal zul�ssigen l�ngen der eingaben
+//werte für die maximal zulässigen längen der eingaben
 int laenge_nickname = 15;
 int laenge_email = 40;
 int laenge_name = 20;
@@ -175,7 +176,14 @@ public Termin[] terminArray;
 	{
 		if(AktNutzer.rechte==ADMIN)
 		{
+			Person tmpPerson = server.anzeigenPerson(PID);
+			if(tmpPerson.rechte == GLEITER)
+			{
+				return 2;//ausgewählte Person ist Gruppenleiter-->erst Gruppenleiter der Gruppe ändern
+			}
+			if(server.loeschenPerson(PID)==true)
 			return 0;
+			else return 1;
 		}else return -9;
 	}
     		/*Scanner sc = new Scanner(System.in);
@@ -329,8 +337,8 @@ public Termin[] terminArray;
 	
 	/*public void aendernGruppe()
 	{
-	    //OFFENE FRAGEN: -Gruppenleiter kann die Rechte der Mitglieder innerhalb seiner Gruppe ändern, ... AAAAAAAAAAAAADMIN? /SPAST!was solln das? sow was von unprofessionell
-	    //               -Gruppenleiter kann nur Gruppe Wechseln über Admin, der zuerst neun(-9) Gruppenleiter ernennt und dann Fribeier für niemanden
+	    //OFFENE FRAGEN: -Gruppenleiter kann die Rechte der Mitglieder innerhalb seiner Gruppe Ã¤ndern, ... AAAAAAAAAAAAADMIN? /SPAST!was solln das? sow was von unprofessionell
+	    //               -Gruppenleiter kann nur Gruppe Wechseln Ã¼ber Admin, der zuerst neun(-9) Gruppenleiter ernennt und dann Fribeier fÃ¼r niemanden
 
 	              
 	    //kann nur Gruppenleiter
@@ -401,7 +409,7 @@ public Termin[] terminArray;
 	    if(AktNutzer.rechte == GLEITER)
 	    {
 	           //Gruppenmitglieder sind angezeigt
-	    	//PID wird �ber GUI angeklickt
+	    	//PID wird über GUI angeklickt
 	    	if(server.loeschenMitglied(PID))
 	    		return 0;
 	    	else return 1;
@@ -412,7 +420,7 @@ public Termin[] terminArray;
 	//alte variante loeschenGlied
 	//Scanner sc = new Scanner(System.in);
     /*int anz = server.anzeigenPersonen().length;
-    if (anz > 0)    //es gibt überhaupt mitglieder
+    if (anz > 0)    //es gibt Ã¼berhaupt mitglieder
 	{
 			Person[] tmpPersonen = new Person[anz];
 			tmpPersonen = server.anzeigenPersonen();
@@ -472,9 +480,9 @@ else return 4;
 	    } return -9;
 	}	
 	
-	//alte version hinzuf�genMIt
+	//alte version hinzufügenMIt
     	       /* int anz = server.anzeigenPersonen().length;
-    	        if (anz > 0)    //es gibt �berhaupt mitglieder
+    	        if (anz > 0)    //es gibt ï¿½berhaupt mitglieder
     			{
         				Person[] tmpPersonen = new Person[anz];
         				int anz2=0;
@@ -615,7 +623,7 @@ else return 4;
 		{
 			Gruppe tmpGruppe = server.anzeigenGruppe(GruppenID);
 			if(server.vergebenRechte(tmpGruppe.leiter, MITGLIED)==false)
-				return 1;//Fehler beim �ndern des alten GL
+				return 1;//Fehler beim Ändern des alten GL
 			if(server.aendernGruppenleiter(GruppenID, PID))
 				return 0;
 			else return 2;
@@ -739,7 +747,7 @@ else return 4;
     				 return 0;
     				 //System.out.println("Loeschen erfolgreich");
     			 else return 1;
-    			 //System.out.println("Fehler beim l�schen");
+    			 //System.out.println("Fehler beim lï¿½schen");
     		 }
     	
     		 else 
@@ -914,14 +922,55 @@ else return 4;
 		return termine.toArray(new Termin[count]);
 	}
 	
-	public int aendernReihenfolge() throws RemoteException
-	{
+	public int aendernReihenfolge(String GIDString) throws RemoteException
+	{//kriegt ein array von GruppenID's
 	    //variable boolean reihenfolge_geaendert zum mitteilen dass sich die reihenfolge geaendert hat zum eintragen der neuen zyklustermine?
 	    if(AktNutzer.rechte == ADMIN)
 	    {
-    	    Scanner sc = new Scanner(System.in);
+	    	//Idee: vgl des von gui bekommenen sortierteb Gruppenarrays mit dem sort DB array
+	    	// wenn beide gleich dann wurde kein gruppe vergesse und es gibt keine doppelt
+	    	// dann bekommenes array auslesen und von 1 beginnend reihenfolge attribut setzen 
+
+	    	//erst alle Gruppen mit reihenfolge anzeigen
+    	    /*int anz= server.anzeigenGruppen().length;
+        	Gruppe[] tmpGruppen = new Gruppe[anz];
+	    	*/
+	    	GIDString = GIDString.replaceAll(" ","");
+	    	String[] GString = GIDString.split(",");
+	    	int[] reihenfolge_GID = new int[GString.length];
+	    	for(int x=0;x<GString.length;x++)
+	    	{
+	    		reihenfolge_GID[x]=Integer.parseInt(GString[x]);
+	    	}
+	    	int[] copy = new int[reihenfolge_GID.length];
+	    	copy = reihenfolge_GID.clone();
+	    	Arrays.sort(copy); 
+	    	int anz = server.anzeigenGruppen().length;
+	    	Gruppe[] tmpGruppen = new Gruppe[anz];
+	    	tmpGruppen = server.anzeigenGruppen();
+	    	int[] dbArray = new int[anz];
+	    	for(int i=0; i<anz;i++)
+	    	{
+	    		dbArray[i] = tmpGruppen[i].id;
+	    	}
+	    	Arrays.sort(dbArray);
+	    	if(Arrays.equals(copy,dbArray)==true)
+	    	{
+	    		for(int j=0;j<anz;j++)
+	    		{
+	    			//server boolean aendernReihenfolge(int GID, String Reihenfolge)throws RemoteException
+	    			server.aendernReihenfolge(reihenfolge_GID[0], String.valueOf(j+1));
+	    		}return 0;
+	    	}return 1;
+	    	
+	    	
+	    	
+	    	
+	    }else return -9;
+	}
+    	    //Scanner sc = new Scanner(System.in);
     	    //erst alle Gruppen mit reihenfolge anzeigen
-    	    int anz= server.anzeigenGruppen().length;
+    	    /*int anz= server.anzeigenGruppen().length;
         	Gruppe[] tmpGruppen = new Gruppe[anz];
         	for(int i=0;i<anz;i++)
         	{			
@@ -953,11 +1002,11 @@ else return 4;
         	        if( ret == false || ret2 == false)
         	        {
         	            return 1;
-        	            //System.out.println("Fehler beim Einfügen der neuen Termine");
-        	            //eig Rollback des Löschens und so
+        	            //System.out.println("Fehler beim EinfÃ¼gen der neuen Termine");
+        	            //eig Rollback des LÃ¶schens und so
         	        }
         	        //System.out.println("Termine wurden erfolgreich eingetragen");
-        	        //Nachricht an alle: "Reihenfolge wurde geändert; neue Termine
+        	        //Nachricht an alle: "Reihenfolge wurde geÃ¤ndert; neue Termine
         		}
         		else return 2;
         		//System.out.println("Fehler beim Aendern der Reihenfolge");
@@ -965,7 +1014,7 @@ else return 4;
         	return 0;
 	    }
 	    return -9;
-	}
+	}*/
 	
 //	http://oreilly.com/catalog/javarmi/chapter/ch10.html
 // http://openbook.galileocomputing.de/javainsel-9/javainsel_17_010.htm#mj-9d80b-91a6c1-9f204a-9-9e533d4b06d-9-98
@@ -1038,7 +1087,7 @@ else return 4;
 	    tmpTermin.gruppe = Integer.parseInt(sc.next());
 	    System.out.println("Geben Sie den Ort des neuen Termin ein");
 	    tmpTermin.ort = sc.next();
-	    //aufrufen der serverfkt zum einf�gen
+	    //aufrufen der serverfkt zum einfï¿½gen
 	    int ret = server.einfuegenAuZykTermin(tmpTermin);
 	    if( ret == -1)
 	    	return 2;
@@ -1063,7 +1112,7 @@ else return 4;
 	}
 			//verschieben um eine Woche
 			/*Scanner sc = new Scanner(System.in);
-			//System.out.println("Wollen Sie den n�chsten Termin aussetzen? (1) Oder wollen Sie einen Termin eingeben? (2)");
+			//System.out.println("Wollen Sie den nï¿½chsten Termin aussetzen? (1) Oder wollen Sie einen Termin eingeben? (2)");
 			int Entscheidung = Integer.parseInt(sc.next());
 			switch (Entscheidung)
 			{
@@ -1078,7 +1127,7 @@ else return 4;
 					String DATE_FORMAT = "yyyy-MM-dd";
 	        		java.util.Date date = new java.util.Date();
 	        	    java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-					if(tmpTermin.gruppe==AktNutzer.gruppe && tmpTermin.datum.before(sqlDate))//ausgew�hlter Termin geh�rt zur eigenen Gruppe & und liegt nicht in der vergangenheit
+					if(tmpTermin.gruppe==AktNutzer.gruppe && tmpTermin.datum.before(sqlDate))//ausgewï¿½hlter Termin gehï¿½rt zur eigenen Gruppe & und liegt nicht in der vergangenheit
 				    {
 						if (server.aussetzenTermin(TerminID)== true)
 							return 0;
@@ -1107,15 +1156,15 @@ else return 4;
 	}
 		
 			/*Scanner sc = new Scanner(System.in);
-			System.out.println("Welchen Termin wollen Sie �berspringen?");
+			System.out.println("Welchen Termin wollen Sie ï¿½berspringen?");
 			//anzeigenTermine();//anzeigen aller? auch vergangene-->GUUUUUI
-			System.out.println("Termin Id eingeben, welcher Termin �berjumpt werden soll:");
+			System.out.println("Termin Id eingeben, welcher Termin ï¿½berjumpt werden soll:");
 			int TerminID = Integer.parseInt(sc.next());
 			Termin tmpTermin = server.anzeigenTermin(TerminID);
 			String DATE_FORMAT = "yyyy-MM-dd";
     		java.util.Date date = new java.util.Date();
     	    java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-			if(tmpTermin.gruppe==AktNutzer.gruppe && tmpTermin.datum.before(sqlDate))//ausgew�hlter Termin geh�rt zur eigenen Gruppe & und liegt nicht in der vergangenheit
+			if(tmpTermin.gruppe==AktNutzer.gruppe && tmpTermin.datum.before(sqlDate))//ausgewï¿½hlter Termin gehï¿½rt zur eigenen Gruppe & und liegt nicht in der vergangenheit
 		    {
 				int ret = server.ueberspringenTermin(TerminID);
 				//if (ret!=-1)
@@ -1133,17 +1182,17 @@ else return 4;
 	public int erstellenTauschanfrage(int TerminID_quelle, int TerminID_ziel) throws RemoteException
 	{
 		/*
-		1) eigenen Termin ausw�hlen
-		1.2) pr�fen ob 3 Tage vorher
-		2) zu tauschenden Termin ausw�hlen
-		3) pr�fen ob schon getauscht-->dbapi.isGetauscht(TerminID)
-		4) pr�fen ob bereits Tauschanfragen existieren-->getAllTauschanfragen-->filtern nach TerminID(tauschanfrage.neu)-->wenn anzahl==0 dann nein ansonsten ja
+		1) eigenen Termin auswï¿½hlen
+		1.2) prï¿½fen ob 3 Tage vorher
+		2) zu tauschenden Termin auswï¿½hlen
+		3) prï¿½fen ob schon getauscht-->dbapi.isGetauscht(TerminID)
+		4) prï¿½fen ob bereits Tauschanfragen existieren-->getAllTauschanfragen-->filtern nach TerminID(tauschanfrage.neu)-->wenn anzahl==0 dann nein ansonsten ja
 		5) wenn nein gehe zu 7)
 		6) wenn ja Ausgabe: jo hey gibt schon Tauschanfrage abbruch
 		7) tauschanfrage eintragen in DB
-		8) auf best�tigung warten
+		8) auf bestï¿½tigung warten
 		-9) wenn ja gehe zu 11)
-		10) wenn nein Meldung: will net-->tauschanfrage wieder l�schen
+		10) wenn nein Meldung: will net-->tauschanfrage wieder lï¿½schen
 		11) Termin tauschen
 */
 		if(AktNutzer.rechte == GLEITER)
@@ -1174,11 +1223,11 @@ else return 4;
 				System.out.println("Sorry dieser Termin wurde bereits getauscht");
 				return 3;
 			}
-			if(tmpTermin.gruppe==AktNutzer.gruppe && dayDiff >=3 && monthDiff==0 && yearDiff==0)//ausgew�hlter Termin ist eigener und es ist noch mind. 3 Tage hin
+			if(tmpTermin.gruppe==AktNutzer.gruppe && dayDiff >=3 && monthDiff==0 && yearDiff==0)//ausgewï¿½hlter Termin ist eigener und es ist noch mind. 3 Tage hin
 			{
 				//anzeigen aller Termine der anderen Gruppe
 				//anzeigenTermine();
-				System.out.println("W�hlen SIe den Termin aus mit dem getauscht werden soll");
+				System.out.println("Wï¿½hlen SIe den Termin aus mit dem getauscht werden soll");
 				int TerminID_ziel = Integer.parseInt(sc.next());
 				if(server.existTauschanfrage(TerminID_ziel))
 				{
