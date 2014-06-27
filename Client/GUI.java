@@ -1,12 +1,12 @@
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
-import java.sql.Time;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,6 +27,7 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
@@ -56,7 +57,6 @@ import com.javaswingcomponents.datepicker.JSCDatePicker;
 import de.shaoranlaos.dbAPI.Gruppe;
 import de.shaoranlaos.dbAPI.Person;
 import de.shaoranlaos.dbAPI.Termin;
-import javax.swing.JScrollPane;
 
 
 public class GUI {
@@ -134,6 +134,7 @@ public class GUI {
 	private JScrollPane scrollPane_2;
 	private JScrollPane scrollPane_3;
 	private JScrollPane scrollPane_4;
+	private JTextField txtReihenfolge;
 
 	/**
 	 * Launch the application.
@@ -182,6 +183,8 @@ public class GUI {
 		frmMeetEat.setBounds(100, 100, 900, 550);
 		frmMeetEat.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmMeetEat.getContentPane().setLayout(new CardLayout(0, 0));
+		frmMeetEat.getContentPane().setPreferredSize(new Dimension(894, 522));
+		frmMeetEat.pack();
 				
 		// Anmelden
 		
@@ -328,7 +331,6 @@ public class GUI {
 			updateTerminList();
 			listTermine.setFont(new Font("Dialog", Font.PLAIN, 12));
 			listTermine.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			listTermine.setSelectedIndex(0);
 			
 			JPanel panelTerminAendern = new JPanel();
 			panelTerminAendern.setBorder(new TitledBorder(null, "Termin \u00E4ndern", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -466,7 +468,6 @@ public class GUI {
 			updateMitgliedList();
 			listMitglieder.setFont(new Font("Dialog", Font.PLAIN, 12));
 			listMitglieder.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			listMitglieder.setSelectedIndex(0);
 
 			JPanel panelMitgliedHinzufuegen = new JPanel();
 			panelMitgliedHinzufuegen.setBorder(new TitledBorder(null, "Mitglied hinzuf\u00FCgen", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -515,6 +516,7 @@ public class GUI {
 			panelMitgliedLoeschen.add(btnLoeschen);
 			
 			comboGruppe = new JComboBox();
+			updateGruppeComboBox();
 			comboGruppe.setFont(new Font("Dialog", Font.PLAIN, 12));
 			comboGruppe.setBounds(75, 12, 337, 25);
 			panelGruppenverwaltung.add(comboGruppe);
@@ -729,7 +731,7 @@ public class GUI {
 			
 			JPanel panelGruppen = new JPanel();
 			panelGruppen.setBorder(new TitledBorder(null, "Gruppen", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-			panelGruppen.setBounds(349, 12, 475, 206);
+			panelGruppen.setBounds(349, 12, 475, 325);
 			panelAdministration.add(panelGruppen);
 			panelGruppen.setLayout(null);
 			
@@ -776,9 +778,20 @@ public class GUI {
 			comboLeiter.setBounds(75, 63, 250, 25);
 			panelGruppen.add(comboLeiter);
 			
+			txtReihenfolge = new JTextField();
+			txtReihenfolge.setColumns(10);
+			txtReihenfolge.setBounds(75, 202, 250, 25);
+			panelGruppen.add(txtReihenfolge);
+			
+			JLabel lblReihenfolge = new JLabel("Reihenfolge");
+			lblReihenfolge.setHorizontalAlignment(SwingConstants.RIGHT);
+			lblReihenfolge.setFont(new Font("Dialog", Font.PLAIN, 12));
+			lblReihenfolge.setBounds(12, 243, 75, 15);
+			panelGruppen.add(lblReihenfolge);
+			
 			JPanel panelTermin2 = new JPanel();
 			panelTermin2.setBorder(new TitledBorder(null, "Termin \u00FCberspringen/aussetzen", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-			panelTermin2.setBounds(349, 230, 475, 245);
+			panelTermin2.setBounds(372, 370, 475, 245);
 			panelAdministration.add(panelTermin2);
 			panelTermin2.setLayout(null);
 			
@@ -799,7 +812,6 @@ public class GUI {
 			listTermine2 = new JList();
 			scrollPane_4.setViewportView(listTermine2);
 			listTermine2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			listTermine2.setSelectedIndex(0);
 			listTermine2.setFont(new Font("Dialog", Font.PLAIN, 12));
 		//}
 
@@ -836,10 +848,11 @@ public class GUI {
 		// Abmelden
 		btnAbmelden.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				txtName.setText("");
+				/*txtName.setText("");
 				pwdPasswort.setText("");
 				panelAnmelden.setVisible(true);
-				panelMain.setVisible(false);
+				panelMain.setVisible(false);*/
+				System.exit(0);
 			}
 		});
 		
@@ -1167,55 +1180,13 @@ public class GUI {
 		// Gruppe erstellen
 		btnErstellen2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Person tmpPerson = (Person) comboLeiter.getSelectedItem();
-				try {
-					int r=c.erstellenGruppe(txtName3.getText(), String.valueOf(tmpPerson.id));
-					switch(r)
-					{
-						case 0:
-							
-							//JOptionPane.showMessageDialog(frmMeetEat, "Nickname erfolgreich geändert.", "ändern", JOptionPane.PLAIN_MESSAGE);
-							break;
-						case -1:
-							JOptionPane.showMessageDialog(frmMeetEat, "Dieser Gruppenname existiert leider schon.", "ändern", JOptionPane.PLAIN_MESSAGE);
-							break;
-						case -2:
-							JOptionPane.showMessageDialog(frmMeetEat, "Es ist ein Fehler aufgetreten.", "ändern", JOptionPane.PLAIN_MESSAGE);
-							break;
-						case -3:
-							JOptionPane.showMessageDialog(frmMeetEat, "Der von ihn angegebene Gruppenname ist zu lang. Maximal " +laenge_gruppenname+"Zeichen", "ändern", JOptionPane.PLAIN_MESSAGE);
-							break;	
-						default:
-							JOptionPane.showMessageDialog(frmMeetEat, "Gruppenerstellung war erfolgreich.", "ändern", JOptionPane.PLAIN_MESSAGE);
-							break;
-					}
-				} catch (RemoteException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				//c.erst
 			}
 		});
 
 		// Gruppe loeschen
 		btnLoeschen2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Gruppe tmpGruppe = (Gruppe) listGruppen.getSelectedValue();
-				try {
-					int r=c.loeschenGruppe(tmpGruppe.id);
-					switch(r)
-					{
-						case 0:
-							JOptionPane.showMessageDialog(frmMeetEat, "Löschen der Gruppe erfolgreich.", "Gruppe löschen", JOptionPane.PLAIN_MESSAGE);
-							break;
-						case 1:
-							JOptionPane.showMessageDialog(frmMeetEat, "Es ist ein Fehler beim löschen der Gruppe ein Fehler aufgetreten.", "Gruppe löschen", JOptionPane.PLAIN_MESSAGE);
-							break;
-					}
-				} catch (RemoteException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				
 			}
 		});
 	}
@@ -1281,14 +1252,7 @@ public class GUI {
 	        if (value instanceof Termin) {
 				DateFormat df=new SimpleDateFormat("dd.MM.yyyy");
 				DateFormat tf=new SimpleDateFormat("HH:mm");
-				String name = "";
-				try {
-					name = c.anzeigenGruppe(((Termin)value).gruppe).name;
-				} catch (RemoteException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-	            setText(name + " am " + df.format(((Termin)value).datum) + " " + tf.format(((Termin)value).zeit));
+	            setText(((Termin)value).gruppenname + " am " + df.format(((Termin)value).datum) + " " + tf.format(((Termin)value).zeit));
 	        }
 	        return this;
 	    }
@@ -1298,7 +1262,8 @@ public class GUI {
 	{
 		try {
 			listMitglieder.setModel(new AbstractListModel() {
-				Person[] values = c.anzeigenMitglied(3);
+				Gruppe tmpGruppe = (Gruppe) comboGruppe.getSelectedItem();
+				Person[] values = c.anzeigenMitglied(tmpGruppe.id);
 				public int getSize() {
 					return values.length;
 				}
@@ -1390,6 +1355,28 @@ public class GUI {
 		listGruppen.setCellRenderer(new GruppeCellRenderer());
 		if (listGruppen.getModel().getSize() > 0)
 			listGruppen.setSelectedIndex(0);
+	}
+	
+	private void updateGruppeComboBox()
+	{
+		try {
+			comboGruppe.setModel(new DefaultComboBoxModel() {
+				Gruppe[] values = c.anzeigenGruppen();
+				public int getSize() {
+					return values.length;
+				}
+				public Object getElementAt(int index) {
+					return values[index];
+				}
+			});
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		comboGruppe.setRenderer(new PersonCellRenderer());
+		if (comboGruppe.getItemCount() > 0)
+			comboGruppe.setSelectedIndex(0);
 	}
 	
 	private class GruppeCellRenderer extends DefaultListCellRenderer {
@@ -1555,14 +1542,7 @@ public class GUI {
 				
 				if (tmpTermin != null) {
 					DateFormat tf=new SimpleDateFormat("HH:mm");
-					String name = "";
-					try {
-						name = c.server.anzeigenGruppe(tmpTermin.gruppe).name;
-					} catch (RemoteException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					return "<html>" + Integer.toString(calendar.get(Calendar.DAY_OF_MONTH)) + "<br><b>" + tf.format(tmpTermin.zeit) + " Uhr<br>" + name + "</b></html>";
+					return "<html>" + Integer.toString(calendar.get(Calendar.DAY_OF_MONTH)) + "<br><b>" + tf.format(tmpTermin.zeit) + " Uhr<br>" + tmpTermin.gruppenname + "</b></html>";
 				} else {
 					return "<html>" + Integer.toString(calendar.get(Calendar.DAY_OF_MONTH)) + "</html>";
 				}
@@ -1641,17 +1621,10 @@ public class GUI {
 							DateFormat tf=new SimpleDateFormat("HH:mm");
 							txtDatumZeit.setText(df.format(tmpTermin.datum) + " " + tf.format(tmpTermin.zeit));
 							txtOrt3.setText(tmpTermin.ort);
-							String name = "";
-							try {
-								name = c.server.anzeigenGruppe(tmpTermin.gruppe).name;
-							} catch (RemoteException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							txtGruppe.setText(name);
+							txtGruppe.setText(tmpTermin.gruppenname);
 							txtEssen.setText(tmpTermin.essen);
+						}
 					}
-				}
 				}
 			}
 		});
