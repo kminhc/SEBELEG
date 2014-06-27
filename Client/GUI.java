@@ -1199,6 +1199,23 @@ public class GUI {
 		// Gruppe loeschen
 		btnLoeschen2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				Gruppe tmpGruppe = (Gruppe) listGruppen.getSelectedValue();
+				try {
+					int r=c.loeschenGruppe(tmpGruppe.id);
+					switch(r)
+					{
+						case 0:
+							JOptionPane.showMessageDialog(frmMeetEat, "Löschen der Gruppe erfolgreich.", "Gruppe löschen", JOptionPane.PLAIN_MESSAGE);
+							break;
+						case 1:
+							JOptionPane.showMessageDialog(frmMeetEat, "Es ist ein Fehler beim löschen der Gruppe ein Fehler aufgetreten.", "Gruppe löschen", JOptionPane.PLAIN_MESSAGE);
+							break;
+					}
+				} catch (RemoteException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 			}
 		});
 	}
