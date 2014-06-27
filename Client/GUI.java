@@ -57,6 +57,8 @@ import com.javaswingcomponents.datepicker.JSCDatePicker;
 import de.shaoranlaos.dbAPI.Gruppe;
 import de.shaoranlaos.dbAPI.Person;
 import de.shaoranlaos.dbAPI.Termin;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
 public class GUI {
 
@@ -266,10 +268,9 @@ public class GUI {
 		panelUebersicht.add(kalender);
 
 		// Muss auskommentiert werden, um Designer zu benutzen
-		/*
-		 * changeTheAppearanceOfTheCells(kalender); addBusinessRules(kalender);
-		 * listenToChangesOnTheCalendar(kalender);
-		 */
+		/*changeTheAppearanceOfTheCells(kalender);
+		addBusinessRules(kalender);
+		listenToChangesOnTheCalendar(kalender);*/
 
 		JPanel panelTermin = new JPanel();
 		panelTermin.setBorder(new TitledBorder(null, "Termin",
@@ -488,6 +489,12 @@ public class GUI {
 		scrollPane_1.setBounds(12, 44, 400, 431);
 		panelGruppenverwaltung.add(scrollPane_1);
 
+		comboGruppe = new JComboBox();
+		updateGruppeComboBox();
+		comboGruppe.setFont(new Font("Dialog", Font.PLAIN, 12));
+		comboGruppe.setBounds(75, 12, 337, 25);
+		panelGruppenverwaltung.add(comboGruppe);
+
 		listMitglieder = new JList();
 		scrollPane_1.setViewportView(listMitglieder);
 		updateMitgliedList();
@@ -547,12 +554,6 @@ public class GUI {
 		btnLoeschen.setFont(new Font("Dialog", Font.PLAIN, 12));
 		btnLoeschen.setBounds(12, 26, 120, 25);
 		panelMitgliedLoeschen.add(btnLoeschen);
-
-		comboGruppe = new JComboBox();
-		updateGruppeComboBox();
-		comboGruppe.setFont(new Font("Dialog", Font.PLAIN, 12));
-		comboGruppe.setBounds(75, 12, 337, 25);
-		panelGruppenverwaltung.add(comboGruppe);
 
 		lblGruppe2 = new JLabel("Gruppe");
 		lblGruppe2.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -808,7 +809,7 @@ public class GUI {
 
 		btnLoeschen2 = new JButton("L\u00F6schen");
 		btnLoeschen2.setFont(new Font("Dialog", Font.PLAIN, 12));
-		btnLoeschen2.setBounds(367, 63, 120, 25);
+		btnLoeschen2.setBounds(367, 100, 120, 25);
 		panelGruppen.add(btnLoeschen2);
 
 		txtName3 = new JTextField();
@@ -993,12 +994,12 @@ public class GUI {
 						break;
 					case 2:
 						JOptionPane.showMessageDialog(frmMeetEat,
-								"Eingabe für Ort zu lang.", "Termin ändern",
+								"Eingabe für Ort zu lang. Maximal " + laenge_ort + "Zeichen.", "Termin ändern",
 								JOptionPane.PLAIN_MESSAGE);
 						break;
 					case 3:
 						JOptionPane.showMessageDialog(frmMeetEat,
-								"Eingabe für Essen zu lang.", "Termin ändern",
+								"Eingabe für Essen zu lang. Maximal " + laenge_essen + "Zeichen.", "Termin ändern",
 								JOptionPane.PLAIN_MESSAGE);
 						break;
 					case 4:
@@ -1097,13 +1098,13 @@ public class GUI {
 						break;
 					case 2:
 						JOptionPane.showMessageDialog(frmMeetEat,
-								"Eingabe für Ort zu lang.",
+								"Eingabe für Ort zu lang. Maximal " + laenge_ort + "Zeichen.",
 								"Außerzyklischer Termin",
 								JOptionPane.PLAIN_MESSAGE);
 						break;
 					case 3:
 						JOptionPane.showMessageDialog(frmMeetEat,
-								"Eingabe für Essen zu lang.",
+								"Eingabe für Essen zu lang. Maximal " + laenge_essen + "Zeichen.",
 								"Außerzyklischer Termin",
 								JOptionPane.PLAIN_MESSAGE);
 						break;
@@ -1133,7 +1134,14 @@ public class GUI {
 			}
 		});
 
-		// Mitglied ausgewhlt
+		// Gruppe ausgewaehlt
+		comboGruppe.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent arg0) {
+				updateMitgliedList();
+			}
+		});
+
+		// Mitglied ausgewaehlt
 		listMitglieder.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				Person tmpPerson = (Person) listMitglieder.getSelectedValue();
@@ -1249,7 +1257,7 @@ public class GUI {
 							JOptionPane
 									.showMessageDialog(
 											frmMeetEat,
-											"Es gab einen Fehler beim ändern vom Nicknamen ",
+											"Es gab einen Fehler beim ändern vom Nicknamen.",
 											"Accountdaten ändern",
 											JOptionPane.PLAIN_MESSAGE);
 							break;
@@ -1515,28 +1523,32 @@ public class GUI {
 					case -1:
 						JOptionPane.showMessageDialog(frmMeetEat,
 								"Dieser Gruppenname existiert leider schon.",
-								"ändern", JOptionPane.PLAIN_MESSAGE);
+								"Gruppe erstellen", JOptionPane.PLAIN_MESSAGE);
 						break;
 					case -2:
 						JOptionPane.showMessageDialog(frmMeetEat,
-								"Es ist ein Fehler aufgetreten.", "ändern",
+								"Es ist ein Fehler aufgetreten.", "Gruppe erstellen",
 								JOptionPane.PLAIN_MESSAGE);
 						break;
 					case -3:
 						JOptionPane.showMessageDialog(frmMeetEat,
 								"Der von ihn angegebene Gruppenname ist zu lang. Maximal "
 										+ laenge_gruppenname + "Zeichen",
-								"ändern", JOptionPane.PLAIN_MESSAGE);
+								"Gruppe erstellen", JOptionPane.PLAIN_MESSAGE);
 						break;
 					default:
 						JOptionPane.showMessageDialog(frmMeetEat,
-								"Gruppenerstellung war erfolgreich.", "ändern",
+								"Gruppenerstellung war erfolgreich.", "Gruppe erstellen",
 								JOptionPane.PLAIN_MESSAGE);
 						break;
 					}
 				} catch (RemoteException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
+					JOptionPane.showMessageDialog(frmMeetEat,
+							"Keine Serververbindung.",
+							"Gruppe erstellen",
+							JOptionPane.PLAIN_MESSAGE);
 				}
 			}
 		});
@@ -1565,6 +1577,10 @@ public class GUI {
 				} catch (RemoteException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
+					JOptionPane.showMessageDialog(frmMeetEat,
+							"Keine Serververbindung.",
+							"Gruppe löschen",
+							JOptionPane.PLAIN_MESSAGE);
 				}
 
 			}
@@ -1757,7 +1773,7 @@ public class GUI {
 			e.printStackTrace();
 		}
 
-		listGruppen.setCellRenderer(new GruppeCellRenderer());
+		listGruppen.setCellRenderer(new GruppeCellRenderer1());
 		if (listGruppen.getModel().getSize() > 0)
 			listGruppen.setSelectedIndex(0);
 	}
@@ -1780,12 +1796,12 @@ public class GUI {
 			e.printStackTrace();
 		}
 
-		comboGruppe.setRenderer(new PersonCellRenderer());
+		comboGruppe.setRenderer(new GruppeCellRenderer2());
 		if (comboGruppe.getItemCount() > 0)
 			comboGruppe.setSelectedIndex(0);
 	}
 
-	private class GruppeCellRenderer extends DefaultListCellRenderer {
+	private class GruppeCellRenderer1 extends DefaultListCellRenderer {
 		public Component getListCellRendererComponent(JList<?> list,
 				Object value, int index, boolean isSelected,
 				boolean cellHasFocus) {
@@ -1794,6 +1810,19 @@ public class GUI {
 			if (value instanceof Gruppe) {
 				setText(((Gruppe) value).name + " (" + ((Gruppe) value).id
 						+ ")");
+			}
+			return this;
+		}
+	}
+	
+	private class GruppeCellRenderer2 extends DefaultListCellRenderer {
+		public Component getListCellRendererComponent(JList<?> list,
+				Object value, int index, boolean isSelected,
+				boolean cellHasFocus) {
+			super.getListCellRendererComponent(list, value, index, isSelected,
+					cellHasFocus);
+			if (value instanceof Gruppe) {
+				setText(((Gruppe) value).name);
 			}
 			return this;
 		}
