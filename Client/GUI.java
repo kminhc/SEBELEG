@@ -1167,7 +1167,32 @@ public class GUI {
 		// Gruppe erstellen
 		btnErstellen2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//c.erst
+				Person tmpPerson = (Person) comboLeiter.getSelectedItem();
+				try {
+					int r=c.erstellenGruppe(txtName3.getText(), String.valueOf(tmpPerson.id));
+					switch(r)
+					{
+						case 0:
+							
+							//JOptionPane.showMessageDialog(frmMeetEat, "Nickname erfolgreich geändert.", "ändern", JOptionPane.PLAIN_MESSAGE);
+							break;
+						case -1:
+							JOptionPane.showMessageDialog(frmMeetEat, "Dieser Gruppenname existiert leider schon.", "ändern", JOptionPane.PLAIN_MESSAGE);
+							break;
+						case -2:
+							JOptionPane.showMessageDialog(frmMeetEat, "Es ist ein Fehler aufgetreten.", "ändern", JOptionPane.PLAIN_MESSAGE);
+							break;
+						case -3:
+							JOptionPane.showMessageDialog(frmMeetEat, "Der von ihn angegebene Gruppenname ist zu lang. Maximal " +laenge_gruppenname+"Zeichen", "ändern", JOptionPane.PLAIN_MESSAGE);
+							break;	
+						default:
+							JOptionPane.showMessageDialog(frmMeetEat, "Gruppenerstellung war erfolgreich.", "ändern", JOptionPane.PLAIN_MESSAGE);
+							break;
+					}
+				} catch (RemoteException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 
